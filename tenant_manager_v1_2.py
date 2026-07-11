@@ -37,8 +37,7 @@ C = {
     "off_white":  "F8F9FA",
     "mid_grey":   "BFC9CA",
     "dark_grey":  "566573",
-    "yellow_inp": "FFF9C4",
-    "label_bg": "EAF2FF",   # user-input cells
+    "yellow_inp": "FFF9C4",   # user-input cells
 }
 
 def fill(hex_color):
@@ -124,166 +123,51 @@ lk.sheet_state = "hidden"
 
 
 # ═══════════════════════════════════════════════════════════════
-# SHEET: TENANT FORM (UPGRADED)
+# SHEET: TENANT FORM
 # ═══════════════════════════════════════════════════════════════
 
 form = wb.create_sheet("TENANT FORM")
-form.sheet_view.showGridLines = False
+
+# Title
+form.merge_cells("A1:D1")
+form["A1"] = "TENANT REGISTRATION FORM"
+
+# Labels
+form["A4"]  = "Tenant ID"
+form["A5"]  = "Full Name"
+form["A6"]  = "Phone"
+form["A7"]  = "Email"
+form["A8"]  = "Emergency Contact"
+form["A9"]  = "ID Type"
+form["A10"] = "ID Number"
+form["A11"] = "Room Number"
+form["A12"] = "Monthly Rent"
+form["A13"] = "Deposit Paid"
+form["A14"] = "Agreement Start"
+form["A15"] = "Agreement End"
+
+# Yellow input cells
+for cell in [
+    "B4",   # Tenant ID
+    "B5",   # Full Name
+    "B6",   # Phone
+    "B7",   # Email
+    "B8",   # Emergency Contact
+    "B9",   # ID Type
+    "B10",  # ID Number
+    "B11",  # Room Number
+    "B12",  # Monthly Rent
+    "B13",  # Deposit Paid
+    "B14",  # Agreement Start
+    "B15",  # Agreement End
+]:
+    form[cell].fill = fill(C["yellow_inp"])
 
 # Column widths
-form.column_dimensions["A"].width = 3
-form.column_dimensions["B"].width = 25
-form.column_dimensions["C"].width = 3
-form.column_dimensions["D"].width = 22
-form.column_dimensions["E"].width = 18
-form.column_dimensions["F"].width = 18
-form.column_dimensions["G"].width = 18
-
-# ─────────────────────────
-# HEADER
-# ─────────────────────────
-
-form.merge_cells("A1:G1")
-c = form["A1"]
-c.value = "🏢 PROPERTY MANAGEMENT SYSTEM"
-c.fill = fill(C["navy"])
-c.font = font(bold=True, color=C["white"], size=13)
-c.alignment = align("center")
-
-form.merge_cells("A2:G2")
-c = form["A2"]
-c.value = "TENANT REGISTRATION FORM"
-c.fill = fill(C["teal"])
-c.font = font(bold=True, color=C["white"], size=16)
-c.alignment = align("center")
-
-form.merge_cells("A3:G3")
-c = form["A3"]
-c.value = "Complete all fields • Yellow cells are editable"
-c.fill = fill(C["dark_grey"])
-c.font = font(color=C["white"], size=9, italic=True)
-c.alignment = align("center")
-
-# ─────────────────────────
-# HELPER
-# ─────────────────────────
-
-def form_label(row, text):
-    cell = form[f"B{row}"]
-    cell.value = text
-    cell.fill = fill(C["label_bg"])
-    cell.font = font(bold=True, color=C["navy"], size=9)
-    cell.border = border()
-    cell.alignment = align("right")
-
-def input_cell(cell_ref):
-    c = form[cell_ref]
-    c.fill = fill(C["yellow_inp"])
-    c.border = border(style="medium")
-    c.font = font(size=9)
-
-# ─────────────────────────
-# TENANT DETAILS
-# ─────────────────────────
-
-fields = [
-    (6,  "Tenant ID",            "D6"),
-    (7,  "Full Name / Company",  "D7"),
-    (8,  "Phone",                "D8"),
-    (9,  "Email",                "D9"),
-    (10, "ID / Reg No.",         "D10"),
-    (11, "Unit Number",          "D11"),
-    (12, "Unit Type",            "D12"),
-    (13, "Floor / Block",        "D13"),
-    (14, "Contract Start",       "D14"),
-    (15, "Contract End",         "D15"),
-    (16, "Monthly Rent",         "D16"),
-    (17, "Currency",             "D17"),
-    (18, "Payment Frequency",    "D18"),
-    (19, "Deposit Paid",         "D19"),
-    (20, "Payment Method",       "D20"),
-]
-
-for row, label, cell_addr in fields:
-    form_label(row, label)
-
-    form.merge_cells(f"{cell_addr}:{chr(ord(cell_addr[0])+2)}{row}")
-    input_cell(cell_addr)
-
-# ─────────────────────────
-# NOTES SECTION
-# ─────────────────────────
-
-form.merge_cells("B23:F23")
-cell = form["B23"]
-cell.value = "Additional Notes / Special Conditions"
-cell.fill = fill(C["navy"])
-cell.font = font(bold=True, color=C["white"])
-cell.alignment = align("center")
-
-form.merge_cells("B24:F28")
-notes = form["B24"]
-notes.fill = fill(C["yellow_inp"])
-notes.border = border(style="medium")
-
-# ─────────────────────────
-# SIGNATURES
-# ─────────────────────────
-
-form.merge_cells("B31:D31")
-form["B31"] = "Tenant Signature"
-
-form.merge_cells("E31:F31")
-form["E31"] = "Property Manager"
-
-for cell in ["B32", "E32"]:
-    form[cell].fill = fill(C["yellow_inp"])
-    form[cell].border = border(style="medium")
-
-# Footer
-form.merge_cells("A35:G35")
-c = form["A35"]
-c.value = "Transfer approved tenant records into TENANTS sheet"
-c.fill = fill(C["dark_grey"])
-c.font = font(color=C["white"], size=8, italic=True)
-c.alignment = align("center")
+form.column_dimensions["A"].width = 22
+form.column_dimensions["B"].width = 30
 
 
-# ─────────────────────────
-# TENANT FORM DROPDOWNS
-# ─────────────────────────
-
-# Unit Type
-unit_type_dv = DataValidation(
-    type="list",
-    formula1='"Office,Shop,Apartment,Warehouse,Studio"'
-)
-form.add_data_validation(unit_type_dv)
-unit_type_dv.add("D12")
-
-# Currency
-currency_dv = DataValidation(
-    type="list",
-    formula1='"GHS,USD,EUR,GBP"'
-)
-form.add_data_validation(currency_dv)
-currency_dv.add("D17")
-
-# Payment Frequency
-payment_freq_dv = DataValidation(
-    type="list",
-    formula1='"Monthly,Quarterly,Semi-Annual,Annual"'
-)
-form.add_data_validation(payment_freq_dv)
-payment_freq_dv.add("D18")
-
-# Payment Method
-payment_method_dv = DataValidation(
-    type="list",
-    formula1='"Cash,Bank Transfer,Mobile Money,Cheque"'
-)
-form.add_data_validation(payment_method_dv)
-payment_method_dv.add("D20")
 
 
 # ═══════════════════════════════════════════════════════════════
