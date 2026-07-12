@@ -580,65 +580,81 @@ ag.freeze_panes = "A4"
 
 # Example agreement row
 AG_EXAMPLE = {
-    "A": "AGR-001", "B": "T-001", "C": "Kwame Mensah Enterprises",
-    "D": "A-101",   "H": "No",    "I": 0,
-    "K": 42000,     "M": "GHS",   "N": 0.05,"J": "",
+    "A": "AGR-001",
+    "B": "T-001",
+    "C": "Kwame Mensah Enterprises",
+    "D": "A-101",
 
+    "H": "No",
+    "I": 0,
+    "J": "",
+
+    "L": 42000,
+    "N": "GHS",
+    "O": 0.05,
 }
+
 
 for row in range(4, 54):
     is_example = (row == 4)
-    is_even    = (row % 2 == 0)
+    is_even = (row % 2 == 0)
 
     for col_letter, _, _ in AG_HEADERS:
-        c       = ag[f"{col_letter}{row}"]
-        c.font  = font(size=9)
+        c = ag[f"{col_letter}{row}"]
+        c.font = font(size=9)
         c.border = border()
         c.alignment = align()
 
-        if col_letter not in ["J","L","O"]:
+        if col_letter not in ["K", "M", "P"]:
             if is_example and col_letter in AG_EXAMPLE:
                 c.value = AG_EXAMPLE[col_letter]
-            if col_letter not in ["J","L","O"]:
-                c.fill = fill(C["yellow_inp"]) if is_example else fill(C["off_white"] if is_even else C["white"])
-                if is_example:
-                    c.font = font(color="00008B", size=9)
 
-    # J = Term months formula
-    j = ag[f"J{row}"]
-    j.value     = f'=IFERROR(DATEDIF(F{row},G{row},"M"),"")'
-    j.font      = font(color="1A5276", size=9)
-    j.alignment = align("center")
-    j.fill      = fill(C["light_blue"])
+            c.fill = (
+                fill(C["yellow_inp"])
+                if is_example
+                else fill(C["off_white"] if is_even else C["white"])
+            )
 
-    # L = Monthly rent from annual
-    l = ag[f"L{row}"]
-    l.value     = f'=IFERROR(IF(K{row}="","",K{row}/12),"")'
-    l.font      = font(color="1A5276", size=9)
-    l.alignment = align("center")
-    l.number_format = '#,##0.00'
-    l.fill      = fill(C["light_blue"])
+            if is_example:
+                c.font = font(color="00008B", size=9)
 
-    # O = Next review date (1 year before end)
-    o = ag[f"O{row}"]
-    o.value     = f'=IFERROR(IF(G{row}="","",G{row}-365),"")'
-    o.font      = font(color="1A5276", size=9)
-    o.alignment = align("center")
-    o.number_format = "DD-MMM-YYYY"
-    o.fill      = fill(C["light_blue"])
+    # K = Term (months)
+    k = ag[f"K{row}"]
+    k.value = f'=IFERROR(DATEDIF(F{row},G{row},"M"),"")'
+    k.font = font(color="1A5276", size=9)
+    k.alignment = align("center")
+    k.fill = fill(C["light_blue"])
+
+    # M = Monthly Rent
+    m = ag[f"M{row}"]
+    m.value = f'=IFERROR(IF(L{row}="","",L{row}/12),"")'
+    m.font = font(color="1A5276", size=9)
+    m.alignment = align("center")
+    m.number_format = '#,##0.00'
+    m.fill = fill(C["light_blue"])
+
+    # P = Next Review Date
+    p = ag[f"P{row}"]
+    p.value = f'=IFERROR(IF(G{row}="","",G{row}-365),"")'
+    p.font = font(color="1A5276", size=9)
+    p.alignment = align("center")
+    p.number_format = "DD-MMM-YYYY"
+    p.fill = fill(C["light_blue"])
+
 
 for row in range(4, 54):
-    for col in ["E","F","G"]:
+    for col in ["E", "F", "G"]:
         ag[f"{col}{row}"].number_format = "DD-MMM-YYYY"
-    ag[f"K{row}"].number_format = '#,##0.00'
-    ag[f"N{row}"].number_format = '0.0%'
+
+    ag[f"L{row}"].number_format = '#,##0.00'
+    ag[f"O{row}"].number_format = '0.0%'
 
 # Set example dates
 if True:
     ag["E4"].value = datetime.date(2024, 1, 1)
     ag["F4"].value = datetime.date(2024, 1, 1)
     ag["G4"].value = datetime.date(2024, 12, 31)
-    ag["N4"].value = 0.05
+    ag["O4"].value = 0.05
 
 # Conditional: highlight renewals
 renewal_rule = FormulaRule(
@@ -653,7 +669,7 @@ add_validation(ag, "H", 4, 53,
     f'LOOKUP!$B${2+len(UNIT_TYPES)+len(STATUS_LIST)+len(FREQ_LIST)+len(CURRENCY)+len(PAYMENT_M)}:'
     f'$B${1+len(UNIT_TYPES)+len(STATUS_LIST)+len(FREQ_LIST)+len(CURRENCY)+len(PAYMENT_M)+len(YES_NO)}'
 )
-add_validation(ag, "M", 4, 53,
+add_validation(ag, "N", 4, 53,
     f'LOOKUP!$B${2+len(UNIT_TYPES)+len(STATUS_LIST)+len(FREQ_LIST)}:'
     f'$B${1+len(UNIT_TYPES)+len(STATUS_LIST)+len(FREQ_LIST)+len(CURRENCY)}'
 )
