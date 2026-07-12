@@ -306,7 +306,7 @@ tn = wb.create_sheet("TENANTS")
 tn.sheet_view.showGridLines = False
 
 # ── Title bar ──
-tn.merge_cells("A1:R1")
+tn.merge_cells("A1:V1")
 c = tn["A1"]
 c.value     = "🏢  TENANT REGISTER"
 c.fill      = fill(C["navy"])
@@ -314,7 +314,7 @@ c.font      = font(bold=True, color=C["white"], size=14)
 c.alignment = align("center")
 tn.row_dimensions[1].height = 32
 
-tn.merge_cells("A2:R2")
+tn.merge_cells("A2:V2")
 c = tn["A2"]
 c.value     = "Yellow cells = data entry  ·  Blue text = formula (do not edit)  ·  Status updates automatically"
 c.fill      = fill(C["dark_grey"])
@@ -333,7 +333,14 @@ T_HEADERS = [
     ("M", "Currency",          10), ("N", "Payment Freq.",        13),
     ("O", "Deposit Paid",      13), ("P", "Payment Method",       14),
     ("Q", "Days to Expiry",    14), ("R", "Status",               12),
+    ("S", "Emergency Contact", 20),
+("T", "Relationship",      15),
+("U", "Emergency Phone",   16),
+("V", "Residential Address", 25),
+
 ]
+
+print("Last TENANTS column:", T_HEADERS[-1][0])
 
 for col_letter, header, width in T_HEADERS:
     c = tn[f"{col_letter}3"]
