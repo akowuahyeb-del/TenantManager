@@ -515,8 +515,42 @@ for col, header, width in ROOM_HEADERS:
 
 # 12 rooms
 for i in range(1, 13):
-    rm[f"A{i+1}"] = f"RM-{i:02d}"
+    row = i + 1
 
+    # Room Number
+    rm[f"A{row}"] = f"RM-{i:02d}"
+
+    # Tenant Name
+    rm[f"C{row}"] = (
+        f'=IFERROR(INDEX(TENANTS!$B$4:$B$53,'
+        f'MATCH(A{row},TENANTS!$F$4:$F$53,0)),"Vacant")'
+    )
+
+    # Monthly Rent
+    rm[f"D{row}"] = (
+        f'=IFERROR(INDEX(TENANTS!$L$4:$L$53,'
+        f'MATCH(A{row},TENANTS!$F$4:$F$53,0)),"")'
+    )
+
+    # Occupancy Status
+    rm[f"E{row}"] = (
+        f'=IF(C{row}="Vacant","Vacant","Occupied")'
+    )
+
+occupied_rule = FormulaRule(
+    formula=['=E2="Occupied"'],
+    fill=fill(C["light_green"]),
+    font=font(bold=True, color=C["green"])
+)
+
+vacant_rule = FormulaRule(
+    formula=['=E2="Vacant"'],
+    fill=fill(C["light_red"]),
+    font=font(bold=True, color=C["red"])
+)
+
+rm.conditional_formatting.add("E2:E13", occupied_rule)
+rm.conditional_formatting.add("E2:E13", vacant_rule)
 
 
 
