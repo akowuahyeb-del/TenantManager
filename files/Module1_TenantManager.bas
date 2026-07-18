@@ -59,6 +59,52 @@ Private Function NextTenantID() As String
     NextTenantID = "T-" & Format(maxNum + 1, "000")
 End Function
 
+
+
+
+' Load a tenant record from TENANTS into the form
+Public Sub LoadTenantToForm(ByVal tenantID As String)
+
+    Dim f As Worksheet, t As Worksheet
+    Dim row As Long
+
+    Set f = FormSheet()
+    Set t = TenantsSheet()
+
+    row = FindTenantRow(tenantID)
+
+    If row = 0 Then
+        MsgBox "Tenant not found.", vbExclamation
+        Exit Sub
+    End If
+
+    f.Range("C5").Value = t.Cells(row, "A").Value
+    f.Range("C7").Value = t.Cells(row, "B").Value
+    f.Range("C9").Value = t.Cells(row, "C").Value
+    f.Range("C11").Value = t.Cells(row, "D").Value
+    f.Range("C13").Value = t.Cells(row, "E").Value
+    f.Range("C15").Value = t.Cells(row, "F").Value
+    f.Range("C17").Value = t.Cells(row, "G").Value
+    f.Range("C19").Value = t.Cells(row, "H").Value
+
+    f.Range("F5").Value = t.Cells(row, "I").Value
+    f.Range("F7").Value = t.Cells(row, "J").Value
+    f.Range("F9").Value = t.Cells(row, "L").Value
+    f.Range("F11").Value = t.Cells(row, "M").Value
+    f.Range("F13").Value = t.Cells(row, "N").Value
+    f.Range("F15").Value = t.Cells(row, "O").Value
+    f.Range("F17").Value = t.Cells(row, "P").Value
+
+    f.Range("I5").Value = t.Cells(row, "S").Value
+    f.Range("I7").Value = t.Cells(row, "T").Value
+    f.Range("I9").Value = t.Cells(row, "U").Value
+
+    f.Range("F19").Value = t.Cells(row, "V").Value
+
+End Sub
+
+
+
 ' Write the form's input fields into a TENANTS row
 Private Sub WriteFormToRow(row As Long, tenantID As String)
     Dim f As Worksheet, t As Worksheet
@@ -129,6 +175,7 @@ Public Sub UpdateTenant()
     Set f = FormSheet()
     tenantID = Trim(f.Range("C5").Value)
     row = FindTenantRow(tenantID)
+    
 
     If row = 0 Then
         MsgBox "No tenant found with ID '" & tenantID & "'. Type an existing Tenant ID into the Tenant ID field, or use Add for a new tenant.", vbExclamation
@@ -227,6 +274,20 @@ Public Sub SearchTenants()
 
     Set f = FormSheet()
     Set t = TenantsSheet()
+        ' Direct Tenant ID lookup
+    If Trim(f.Range("C25").Value) <> "" Then
+
+        Dim foundRow As Long
+
+        foundRow = FindTenantRow(Trim(f.Range("C25").Value))
+
+        If foundRow > 0 Then
+            LoadTenantToForm Trim(f.Range("C25").Value)
+            MsgBox "Tenant loaded into form.", vbInformation
+            Exit Sub
+        End If
+
+    End If
     searchText = LCase(Trim(f.Range("C25").Value))
     statusFilter = Trim(f.Range("G25").Value)
     If statusFilter = "" Then statusFilter = "All"
@@ -276,7 +337,11 @@ Public Sub SearchTenants()
 ContinueLoop:
     Next r
 
-    If matchCount = 0 Then MsgBox "No tenants matched your search.", vbInformation
+    If matchCount = 0 Then
+    MsgBox "No tenants matched your search.", vbInformation
+Else
+    MsgBox matchCount & " tenant(s) found.", vbInformation
+End If
 End Sub
 
 Public Sub RefreshGrid()
