@@ -1,40 +1,1 @@
-' ============================================================
-' Paste this into the "TENANT FORM" SHEET's own code module
-' (NOT a standard module):
-'   Right-click the TENANT FORM tab -> View Code -> paste this
-' ============================================================
-Option Explicit
-
-Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean)
-
-    If Not Intersect(Target, Me.Range("A41:B41")) Is Nothing Then
-        Cancel = True
-        AddTenant
-
-    ElseIf Not Intersect(Target, Me.Range("D41:E41")) Is Nothing Then
-        Cancel = True
-        UpdateTenant
-
-    ElseIf Not Intersect(Target, Me.Range("G41:H41")) Is Nothing Then
-        Cancel = True
-        DeleteTenant
-
-    ElseIf Not Intersect(Target, Me.Range("I41:J41")) Is Nothing Then
-        Cancel = True
-        ResetForm
-
-    ElseIf Not Intersect(Target, Me.Range("K41:L41")) Is Nothing Then
-        Cancel = True
-        CloseForm
-
-    ElseIf Not Intersect(Target, Me.Range("I25:J25")) Is Nothing Then
-        Cancel = True
-        SearchTenants
-
-    ElseIf Not Intersect(Target, Me.Range("H21:K22")) Is Nothing Then
-        Cancel = True
-        UploadDocument
-
-    End If
-
-End Sub
+Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean)    If Not Intersect(Target, Me.Range("A41:B41")) Is Nothing Then        Cancel = True        AddTenant    ElseIf Not Intersect(Target, Me.Range("D41:E41")) Is Nothing Then        Cancel = True        UpdateTenant    ElseIf Not Intersect(Target, Me.Range("G41:H41")) Is Nothing Then        Cancel = True        DeleteTenant    ElseIf Not Intersect(Target, Me.Range("I41:J41")) Is Nothing Then        Cancel = True        ResetForm    ElseIf Not Intersect(Target, Me.Range("K41:L41")) Is Nothing Then        Cancel = True        CloseForm    ElseIf Not Intersect(Target, Me.Range("I25:J25")) Is Nothing Then        Cancel = True        SearchTenants    ElseIf Not Intersect(Target, Me.Range("H21:K22")) Is Nothing Then        Cancel = True        UploadDocument    ' Database grid rows    ElseIf Not Intersect(Target, Me.Range("A34:L39")) Is Nothing Then        Cancel = True        If Trim(Me.cells(Target.row, "A").Value) <> "" Then            LoadTenantToForm Me.cells(Target.row, "A").Value        End If    End IfEnd Sub
