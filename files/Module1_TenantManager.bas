@@ -98,6 +98,8 @@ Public Sub LoadTenantToForm(ByVal tenantID As String)
     f.Range("I9").Value = t.cells(rw, "U").Value
 
     f.Range("F19").Value = t.cells(rw, "V").Value
+    f.Range("H12").Value = t.Cells(rw, "W").Value
+
 
 End Sub
 
@@ -129,6 +131,8 @@ Private Sub WriteFormToRow(row As Long, tenantID As String)
     t.cells(row, "T").Value = f.Range("I7").Value    ' Relationship
     t.cells(row, "U").Value = f.Range("I9").Value    ' Emergency Phone
     t.cells(row, "V").Value = f.Range("F19").Value   ' Residential Address
+    t.Cells(row, "W").Value = f.Range("H12").Value
+
 
     ' Re-apply the K / Q / R formulas for this row (Term, Days to Expiry, Status)
     t.cells(row, "K").Formula = "=IFERROR(DATEDIF(I" & row & ",J" & row & ",""M""),"""")"
@@ -200,7 +204,7 @@ Public Sub DeleteTenant()
     If MsgBox("Delete tenant " & tenantID & "? This cannot be undone.", vbYesNo + vbQuestion) <> vbYes Then Exit Sub
 
     Dim cols As Variant, i As Long
-    cols = Array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V")
+    cols = Array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V","W")
     For i = LBound(cols) To UBound(cols)
         t.cells(row, cols(i)).ClearContents
     Next i
